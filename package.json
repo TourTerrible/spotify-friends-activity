@@ -5,16 +5,27 @@
   "private": true,
   "scripts": {
     "watch": "webpack --mode=development --watch --config config/webpack.config.js",
-    "build": "webpack --mode=production --config config/webpack.config.js"
+    "build": "webpack --mode=production --config config/webpack.config.js",
+    "lint": "standard"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "spotify-buddylist": "^1.0.0",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^4.3.0",
+    "eslint": "^8.5.0",
+    "eslint-loader": "^4.0.2",
     "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^0.10.1",
     "size-plugin": "^2.0.2",
+    "standard": "^14.3.4",
+    "style-loader": "^3.3.1",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^4.7.2",
     "webpack-merge": "^5.8.0"
   }
 }

@@ -30,6 +30,18 @@ chrome.runtime.sendMessage(
   }
 );
 
+chrome.runtime.sendMessage(
+  {
+    type: 'FetchNow',
+    payload: {
+      message: 'fetch',
+    },
+  },
+  response => {
+    console.log(response.message);
+  }
+);
+
 // Listen for message
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'COUNT') {

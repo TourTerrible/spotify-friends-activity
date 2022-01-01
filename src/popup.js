@@ -1,6 +1,8 @@
 'use strict';
 
-import './popup.css';
+import './popup.css'
+
+var friend_activities=[];
 
 (function() {
   // We will make use of Storage API to get and store `count` value
@@ -10,103 +12,114 @@ import './popup.css';
   // To get storage access, we have to mention it in `permissions` property of manifest.json file
   // More information on Permissions can we found at
   // https://developer.chrome.com/extensions/declare_permissions
-  const counterStorage = {
-    get: cb => {
-      chrome.storage.sync.get(['count'], result => {
-        cb(result.count);
-      });
-    },
-    set: (value, cb) => {
-      chrome.storage.sync.set(
-        {
-          count: value,
-        },
-        () => {
-          cb();
-        }
-      );
-    },
-  };
+  // const counterStorage = {
+  //   get: cb => {
+  //     chrome.storage.sync.get(['count'], result => {
+  //       cb(result.count);
+  //     });
+  //   },
+  //   set: (value, cb) => {
+  //     chrome.storage.sync.set(
+  //       {
+  //         count: value,
+  //       },
+  //       () => {
+  //         cb();
+  //       }
+  //     );
+  //   },
+  // };
 
-  function setupCounter(initialValue = 0) {
-    document.getElementById('counter').innerHTML = initialValue;
+  // function setupCounter(initialValue = 0) {
+  //   document.getElementById('counter').innerHTML = initialValue;
 
-    document.getElementById('incrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'INCREMENT',
-      });
-    });
+  //   document.getElementById('incrementBtn').addEventListener('click', () => {
+  //     updateCounter({
+  //       type: 'INCREMENT',
+  //     });
+  //   });
 
-    document.getElementById('decrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'DECREMENT',
-      });
-    });
-  }
+  //   document.getElementById('decrementBtn').addEventListener('click', () => {
+  //     updateCounter({
+  //       type: 'DECREMENT',
+  //     });
+  //   });
+  // }
 
-  function updateCounter({ type }) {
-    counterStorage.get(count => {
-      let newCount;
+  // function updateCounter({ type }) {
+  //   counterStorage.get(count => {
+  //     let newCount;
 
-      if (type === 'INCREMENT') {
-        newCount = count + 1;
-      } else if (type === 'DECREMENT') {
-        newCount = count - 1;
-      } else {
-        newCount = count;
-      }
+  //     if (type === 'INCREMENT') {
+  //       newCount = count + 1;
+  //     } else if (type === 'DECREMENT') {
+  //       newCount = count - 1;
+  //     } else {
+  //       newCount = count;
+  //     }
 
-      counterStorage.set(newCount, () => {
-        document.getElementById('counter').innerHTML = newCount;
+  //     counterStorage.set(newCount, () => {
+  //       document.getElementById('counter').innerHTML = newCount;
 
-        // Communicate with content script of
-        // active tab by sending a message
-        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-          const tab = tabs[0];
+  //       // Communicate with content script of
+  //       // active tab by sending a message
+  //       chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+  //         const tab = tabs[0];
 
-          chrome.tabs.sendMessage(
-            tab.id,
-            {
-              type: 'COUNT',
-              payload: {
-                count: newCount,
-              },
-            },
-            response => {
-              console.log('Current count value passed to contentScript file');
-            }
-          );
-        });
-      });
-    });
-  }
+  //         chrome.tabs.sendMessage(
+  //           tab.id,
+  //           {
+  //             type: 'COUNT',
+  //             payload: {
+  //               count: newCount,
+  //             },
+  //           },
+  //           response => {
+  //             console.log('Current count value passed to contentScript file');
+  //           }
+  //         );
+  //       });
+  //     });
+  //   });
+  // }
 
-  function restoreCounter() {
-    // Restore count value
-    counterStorage.get(count => {
-      if (typeof count === 'undefined') {
-        // Set counter value as 0
-        counterStorage.set(0, () => {
-          setupCounter(0);
-        });
-      } else {
-        setupCounter(count);
-      }
-    });
-  }
+  // function restoreCounter() {
+  //   // Restore count value
+  //   counterStorage.get(count => {
+  //     if (typeof count === 'undefined') {
+  //       // Set counter value as 0
+  //       counterStorage.set(0, () => {
+  //         setupCounter(0);
+  //       });
+  //     } else {
+  //       setupCounter(count);
+  //     }
+  //   });
+  // }
 
-  document.addEventListener('DOMContentLoaded', restoreCounter);
+  
 
-  // Communicate with background file by sending a message
+  // document.addEventListener('DOMContentLoaded', restoreCounter);
+
+  //Communicate with background file by sending a message
   chrome.runtime.sendMessage(
     {
-      type: 'GREETINGS',
-      payload: {
-        message: 'Hello, my name is Pop. I am from Popup.',
-      },
+      type: "GetActivity" 
     },
     response => {
-      console.log(response.message);
+      //document.getElementById('counter').innerHTML = response.data;
+      console.log(response.data);
+      friend_activities=response.data;
+      // document.getElementById('textview').innerHTML = response.data[1].user.name;
     }
   );
+
+//   chrome.runtime.sendMessage({ type: "GetActivity" });
+//   chrome.runtime.onMessage.addListener( async(request,sender, sendResponse)=>{
+//     console.log("Msg recieed");
+//    //await fetchActivity();
+//     if (request.type=== 'recieved') {
+//       document.getElementById('counter').innerHTML = request.data;
+//    }
+//  });
 })();
