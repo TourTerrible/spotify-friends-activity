@@ -12,9 +12,20 @@ console.log("Hey");
 
 var my_activities=[];
 
-async function fetchActivity () {
-  const spDcCookie = 'AQDCq28m1t4LkCDpWlZhhY3bFjalJxew7hvpWMkeKsmrbi0d6hauXMTij7NYf-ONBImn4Zhz78vPJGJBw0m8BzxhtxtRlCR04XiLIQV8jqvb0w'
+function getCookies(domain, name, callback) {
+  chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
+      if(callback) {
+          callback(cookie.value);
+      }
+  });
+}
 
+async function fetchActivity () {
+  var ID;
+  getCookies("https://open.spotify.com", "sp_dc", function(id) {
+    ID=id;
+  });
+  const spDcCookie = ID;
   const { accessToken } = await buddyList.getWebAccessToken(spDcCookie)
   const friendActivity = await buddyList.getFriendActivity(accessToken)
   //console.log(JSON.stringify(friendActivity, null, 2))
@@ -35,11 +46,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 chrome.runtime.onMessage.addListener( async(request,sender, sendResponse)=>{
    if (request.type=== 'GetActivity') {
-		sendResponse({ data: my_activities });
+		sendResponse({ data: my_activities});
     console.log("gettting activity");
 	}
 });
 
+
+//usage:
+// getCookies("https://open.spotify.com", "sp_dc", function(id) {
+//   console.log(id);
+// });
 
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //   //main();

@@ -20,7 +20,10 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs",
+    "cookies",
+    "https://open.spotify.com/*"
   ],
   "content_scripts": [
     {
