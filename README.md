@@ -1,19 +1,28 @@
-# <img src="public/icons/icon_48.png" width="45" align="left"> Spotify Friend Activity
+# <img src="public/icons/icon_48.png" width="45" align="left"> Spotify Friend Activity: Chrome Extension
 
-## Features
+## Overview
 
-- Feature 1
-- Feature 2
+Spotify web player do not has Friend Activity feature where you can see what your Spotify friends have been listening to the past couple of hours as it has on web player.
 
-## Install
+- View spotify friend activity in chrome extension
+- clickable user, track, artist and playlist just like desktop app.
+- Extension popup:
 
-[**Chrome** extension]() <!-- TODO: Add chrome extension link inside parenthesis -->
+![Screenshot from 2022-01-03 00-57-10](https://user-images.githubusercontent.com/45756011/147887634-c8f0f859-7577-4499-904c-9ef062c7ae91.png)
 
-## Contribution
 
-Suggestions and pull requests are welcomed!.
+## Use
+- Extract files after downloading FriendActicityExtension.zip
+- Open chrome and go to extension manager or simply chrome://extensions
+- Turn on developer mode, click on load unpacked, select the extracted folder.
+
+
+
+
 
 ---
-
-This project was bootstrapped with [Chrome Extension CLI](https://github.com/dutiyesh/chrome-extension-cli)
+- It uses npm library https://github.com/valeriangalliat/spotify-buddylist to fetch data.
+- Suggestions and pull requests are welcomed!.
+  - Extension popup interface/UI can be improved further.
+  - Addition panel can be embedded in web page itself instead of popup.
 
