@@ -15,6 +15,7 @@ Spotify web player do not has Friend Activity feature where you can see what you
 - Extract files after downloading FriendActicityExtension.zip
 - Open chrome and go to extension manager or simply chrome://extensions
 - Turn on developer mode, click on load unpacked, select the extracted folder.
+- You need to be logged in your web browser to fetch friend activity.
 
 
 
