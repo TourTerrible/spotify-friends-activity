@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Spotify Friend-activity",
   "version": "0.1.0",
-  "description": "My Chrome Extension",
+  "description": "Chrome extension to check friends activity while using spotify in a web player",
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",

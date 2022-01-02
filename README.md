@@ -1,7 +1,5 @@
 # <img src="public/icons/icon_48.png" width="45" align="left"> Spotify Friend Activity
 
-My Chrome Extension
-
 ## Features
 
 - Feature 1

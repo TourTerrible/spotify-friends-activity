@@ -102,24 +102,6 @@ window.addEventListener('click',function(e){
     chrome.tabs.create({url:e.target.href})
   }
 })
-  
-
-  // document.addEventListener('DOMContentLoaded', restoreCounter);
-
-  //Communicate with background file by sending a message
-  
-  function unixTime(unixtime) {
-
-    var u = new Date(unixtime*1000);
-
-      return u.getUTCFullYear() +
-        '-' + ('0' + u.getUTCMonth()).slice(-2) +
-        '-' + ('0' + u.getUTCDate()).slice(-2) + 
-        ' ' + ('0' + u.getUTCHours()).slice(-2) +
-        ':' + ('0' + u.getUTCMinutes()).slice(-2) +
-        ':' + ('0' + u.getUTCSeconds()).slice(-2) +
-        '.' + (u.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) 
-  };
 
   function getWebUrl(uri){
     var c=0;
@@ -135,18 +117,48 @@ window.addEventListener('click',function(e){
     }
   }
 
+  function diff(timestamp1, timestamp2) {
+    var difference = timestamp1 - timestamp2;
+    var daysDifference = Math.floor(difference/1000/60/60/24);
+    var hours_Difference = Math.floor(difference/1000/60/60);
+    var min_Difference = Math.floor(difference/1000/60);
+    if(daysDifference>0){
+      return daysDifference+' d';
+    }
+    else if(hours_Difference>0){
+      return hours_Difference+' hr';
+    }
+    else if(min_Difference>6){
+      return min_Difference+' min';
+    }
+    else{
+      return 'playing';
+    }
+}
+
   function appendData(data) {
     var mainContainer = document.getElementById("textview");
-    for (var i = 0; i < data.length; i++) {
+    for (var i = data.length-1; i >=0; i--) {
       var time_stamp=data[i].timestamp;  
+      var unix = Math.round(+new Date());
+      var last_played=diff(unix,time_stamp);
       var user_name=data[i].user.name;
       var user_link="https://open.spotify.com/user/"+ getWebUrl(data[i].user.uri);
       var user_image_url=data[i].user.imageUrl;
-      var track_name=data[i].track.name;
+      var track_name=data[i].track.name.substring(0,22);
+      if(data[i].track.name.length>22){
+        track_name+='...';
+      }
       var track_link="https://open.spotify.com/track/"+ getWebUrl(data[i].track.uri);
-      var artist_name=data[i].track.artist.name;
+      var artist_name=data[i].track.artist.name.substring(0,22);
+      if(data[i].track.artist.name.length>22){
+        artist_name=artist_name+'...';
+      }
       var artist_link="https://open.spotify.com/track/"+ getWebUrl(data[i].track.artist.uri);
       var context_name=data[i].track.context.name;
+      if(context_name.length>43){
+        context_name=context_name.substring(0,43)+'...';
+      }
       var context_uri=data[i].track.context.uri;
       var context_link;
       if(context_uri.includes("playlist")){
@@ -155,37 +167,94 @@ window.addEventListener('click',function(e){
       else{
         context_link="https://open.spotify.com/album/"+ getWebUrl(context_uri);
       }
-      console.log(unixTime(time_stamp));
+      var main_div=document.createElement("div");
 
-        // var div = document.createElement("div");
-        // div.className="friend"
-        // var t=document.createElement("a");
-        // t.className="username"
-        // t.setAttribute("href", "https://open.spotify.com/track/"+ getWebUrl(data[i].track.uri));
-        // var t2 = document.createTextNode(data[i].track.name);
-        // t.appendChild(t2);
-        // //var i=document.createElement("img");
-        // // i.src=data[i].user.imageUrl;
-        // //i.src="https://i.scdn.co/image/ab67757000003b82fdb6e4c03ddf8478695d103c";
-        // div.innerHTML = data[i].user.name + ': ';
-        // //mainContainer.appendChild(i);
-        // div.appendChild(t);
-        // mainContainer.appendChild(div);
+      var container=document.createElement("div");
+      container.className="container";
+      var pic=document.createElement("img");
+      pic.className="profile_pic";
+      pic.src=user_image_url;
+      container.appendChild(pic);
+
+      var text_div=document.createElement("div");
+
+      text_div.className="maindiv";
+      
+      var user=document.createElement("a");
+      user.className="user_name";
+      user.setAttribute("href",user_link);
+      var name = document.createTextNode(user_name);
+      user.appendChild(name);
+      text_div.appendChild(user);
+
+      var status=document.createElement('span');
+      status.className="status";
+      var txt=document.createTextNode(' '+last_played);
+      status.appendChild(txt);
+      text_div.appendChild(status);
+
+      var brek=document.createElement("br");
+      text_div.appendChild(brek);
+
+      var song=document.createElement("a");
+      song.className="song_name";
+      song.setAttribute("href",track_link);
+      var s_name = document.createTextNode(track_name);
+      song.appendChild(s_name);
+      text_div.appendChild(song);
+
+      text_div.appendChild(document.createTextNode(" . "));
+
+      var singer=document.createElement("a");
+      singer.className="song_name";
+      singer.setAttribute("href",artist_link);
+      var sin_name = document.createTextNode(artist_name);
+      singer.appendChild(sin_name);
+      text_div.appendChild(singer);
+
+
+
+      var brek=document.createElement("br");
+      text_div.appendChild(brek);
+      
+      var song_context=document.createElement("a");
+      song_context.className="song_name";
+      song_context.setAttribute("href",context_link);
+      var c_name = document.createTextNode(context_name);
+      song_context.appendChild(c_name);
+      text_div.appendChild(song_context);
+
+      container.appendChild(text_div);
+      
+      main_div.appendChild(container);
+      mainContainer.appendChild(main_div);
     }
 }
+
+chrome.runtime.sendMessage(
+  {
+    type: 'FetchNow',
+    payload: {
+      message: 'fetch',
+    },
+  },
+  response => {
+    console.log(response.message);
+  }
+);
 
   chrome.runtime.sendMessage(
     {
       type: "GetActivity" 
     },
     response => {
-      //document.getElementById('counter').innerHTML = response.data;
-      console.log(response.data);
       friend_activities=response.data;
 
       appendData(response.data);
       // document.getElementById('textview').innerHTML = response.data[1].user.name;
     }
   );
+
+
 
 })();
