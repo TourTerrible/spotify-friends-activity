@@ -2,7 +2,7 @@
 
 ## Overview
 
-Spotify web player do not has Friend Activity feature where you can see what your Spotify friends have been listening to the past couple of hours as it has on web player.
+Spotify web player do not has Friend Activity feature where you can see what your Spotify friends have been listening to the past couple of hours as it has on desktop app.
 
 - View spotify friend activity in chrome extension
 - clickable user, track, artist and playlist just like desktop app.
